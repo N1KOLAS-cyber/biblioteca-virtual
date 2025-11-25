@@ -13,38 +13,12 @@
         [
             'name' => 'Roles y permisos',
             'icon' => 'fa-solid fa-shield-halved',
-            'href' => '#',
-            'active' => false,
+            'href' => route('admin.dashboard'),
+            'active' => request()->routeIs('admin.roles.*'),
         ],
-        [
-            'name' => 'Usuarios',
-            'icon' => 'fa-solid fa-users',
-            'href' => '#',
-            'active' => false,
-        ],
-        [
-            'name' => 'libros',
-            'icon' => 'fa-solid fa-cart-shopping',
-            'submenu' => [
-                [
-                    'name' => 'libro 1',
-                    'href' => '#',
-                    'active' => false,
-                ],
-                [
-                    'name' => 'libro 2',
-                    'href' => '#',
-                    'active' => false,
-                ],
-                [
-                    'name' => 'libro 3',
-                    'href' => '#',
-                    'active' => false,
-                ],
-            ],
-        ],
+        ];
 
-    ];
+          
 @endphp
 
 <aside id="top-bar-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full bg-gray-50 border-r border-gray-200 sm:translate-x-0" aria-label="Sidebar">
