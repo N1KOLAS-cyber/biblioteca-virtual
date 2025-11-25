@@ -1,10 +1,3 @@
 <div>
-    <livewire:data-table
-        :model="$model"
-        :columns="$columns"
-        :filters="$filters"
-        :search="$search"
-        :sort="$sort"
-        :per-page="$perPage"
-    />
+    {{-- If you look to others for fulfillment, you will never truly be fulfilled. --}}
 </div>

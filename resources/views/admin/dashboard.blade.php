@@ -2,14 +2,9 @@
     [
         'name' => 'Dashboard',
     ],
-    [
-        'name' => 'Roles',
-        'href' => route('admin.roles.index'),
-    ],
-    [
-        'name' => 'crear'],
 ]">
-    hola desde admin
-
+    <div class="p-6">
+        {{-- Contenido del dashboard --}}
+    </div>
 </x-admin-layout>
 

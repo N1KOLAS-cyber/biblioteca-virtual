@@ -24,7 +24,7 @@
             @endforeach
         </ol>
         {{-- El último item aparece como negritas --}}
-        @if (count($breadcrumbs) > 1)
+        @if (count($breadcrumbs) >= 1)
             <h6 class="font-bold mt-2">
                 {{ end($breadcrumbs)['name'] }}
             </h6>

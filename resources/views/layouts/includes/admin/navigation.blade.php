@@ -12,7 +12,6 @@
                 </button>
                 <a href="{{ route('admin.dashboard') }}" class="flex ms-2 md:me-24">
                 <img src="{{ asset('images/logo.png') }}" class="h-6 me-3" alt="NubeLectora Logo" />
-                <span class="self-center text-lg font-semibold text-heading whitespace-nowrap dark:text-dark">NubeLectora</span>
                 </a>
             </div>
             <x-dropdown align="right" width="48">
