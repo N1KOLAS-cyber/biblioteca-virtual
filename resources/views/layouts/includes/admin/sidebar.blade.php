@@ -23,36 +23,37 @@
             'active' => false,
         ],
         [
-            'name' => 'E-commerce',
+            'name' => 'libros',
             'icon' => 'fa-solid fa-cart-shopping',
             'submenu' => [
                 [
-                    'name' => 'Products',
+                    'name' => 'libro 1',
                     'href' => '#',
                     'active' => false,
                 ],
                 [
-                    'name' => 'Billing',
+                    'name' => 'libro 2',
                     'href' => '#',
                     'active' => false,
                 ],
                 [
-                    'name' => 'Invoice',
+                    'name' => 'libro 3',
                     'href' => '#',
                     'active' => false,
                 ],
             ],
         ],
+
     ];
 @endphp
 
 <aside id="top-bar-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full bg-gray-50 border-r border-gray-200 sm:translate-x-0" aria-label="Sidebar">
     <div class="h-full px-3 pb-4 overflow-y-auto bg-gray-50">
-        {{-- Logo Flowbite --}}
+        {{-- Logo NubeLectora --}}
         <div class="pt-4 pb-2 mb-4">
             <a href="{{ route('admin.dashboard') }}" class="flex items-center ps-2.5">
-                <img src="https://flowbite.com/docs/images/logo.svg" class="h-6 me-3" alt="Flowbite Logo" />
-                <span class="self-center text-xl font-semibold text-gray-900 whitespace-nowrap">Flowbite</span>
+                <img src="{{ asset('images/logo.png') }}" class="h-6 me-3" alt="NubeLectora Logo" />
+                <span class="self-center text-xl font-semibold text-gray-900 whitespace-nowrap">NubeLectora</span>
             </a>
         </div>
 
