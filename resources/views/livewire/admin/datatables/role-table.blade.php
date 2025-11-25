@@ -1,0 +1,10 @@
+<div>
+    <livewire:data-table
+        :model="$model"
+        :columns="$columns"
+        :filters="$filters"
+        :search="$search"
+        :sort="$sort"
+        :per-page="$perPage"
+    />
+</div>
