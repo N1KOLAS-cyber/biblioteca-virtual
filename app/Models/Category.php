@@ -24,6 +24,13 @@ class Category extends Model
         'order' => 'integer',
     ];
 
+    // Libros de esta categoría
+    public function books()
+    {
+        return $this->belongsToMany(Book::class, 'book_category')
+            ->withTimestamps();
+    }
+
     // Generar slug automáticamente
     protected static function boot()
     {

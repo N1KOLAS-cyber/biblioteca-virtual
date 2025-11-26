@@ -33,11 +33,11 @@ class Author extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Libros del autor (se implementará cuando se cree el modelo Book)
-    // public function books()
-    // {
-    //     return $this->hasMany(Book::class);
-    // }
+    // Libros del autor
+    public function books()
+    {
+        return $this->hasMany(Book::class);
+    }
 
     // Helpers
     public function isSystemWriter(): bool

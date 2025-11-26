@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -24,7 +26,8 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::all();
-        return view('admin.users.create', compact('roles'));
+        $plans = Plan::where('is_active', true)->orderBy('order')->get();
+        return view('admin.users.create', compact('roles', 'plans'));
     }
 
     /**
@@ -38,6 +41,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'nullable|exists:roles,id',
+            'plan_id' => 'nullable|exists:plans,id',
         ]);
 
         //si pasa la validacion creara el usuario
@@ -51,6 +55,35 @@ class UserController extends Controller
         if ($request->role) {
             $role = Role::findOrFail($request->role);
             $user->assignRole($role);
+        }
+
+        //crear membresía si se proporcionó un plan
+        if ($request->plan_id) {
+            $plan = Plan::findOrFail($request->plan_id);
+            
+            // Calcular fecha de expiración
+            $expiresAt = null;
+            if ($plan->duration_days !== null) {
+                $expiresAt = now()->addDays($plan->duration_days);
+            }
+            
+            // Calcular fecha de fin de prueba si aplica
+            $trialEndsAt = null;
+            if ($plan->trial_days > 0) {
+                $trialEndsAt = now()->addDays($plan->trial_days);
+            }
+            
+            DB::table('memberships')->insert([
+                'user_id' => $user->id,
+                'plan_id' => $plan->id,
+                'status' => $plan->trial_days > 0 ? 'trial' : 'active',
+                'started_at' => now(),
+                'expires_at' => $expiresAt,
+                'trial_ends_at' => $trialEndsAt,
+                'auto_renew' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
 
         //variable de un solo uso para alerta
@@ -78,7 +111,18 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = Role::all();
-        return view('admin.users.edit', compact('user', 'roles'));
+        $plans = Plan::where('is_active', true)->orderBy('order')->get();
+        
+        // Obtener el plan actual del usuario
+        $currentMembership = DB::table('memberships')
+            ->where('user_id', $user->id)
+            ->where('status', 'active')
+            ->latest('started_at')
+            ->first();
+        
+        $currentPlanId = $currentMembership ? $currentMembership->plan_id : null;
+        
+        return view('admin.users.edit', compact('user', 'roles', 'plans', 'currentPlanId'));
     }
 
     /**
@@ -95,6 +139,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
             'role' => 'nullable|exists:roles,id',
+            'plan_id' => 'nullable|exists:plans,id',
         ]);
 
         //preparar datos para actualizar
@@ -114,11 +159,22 @@ class UserController extends Controller
         $roleChanged = ($request->role && $currentRoleId != $request->role) 
             || (!$request->role && $currentRoleId);
 
+        //verificar si el plan cambió
+        $currentMembership = DB::table('memberships')
+            ->where('user_id', $user->id)
+            ->where('status', 'active')
+            ->latest('started_at')
+            ->first();
+        $currentPlanId = $currentMembership ? $currentMembership->plan_id : null;
+        $newPlanId = $request->plan_id ? (int) $request->plan_id : null;
+        $planChanged = $currentPlanId !== $newPlanId;
+
         //verificar si hubo cambios en los datos
         $hasChanges = $user->name !== $request->name 
             || $user->email !== $request->email 
             || $request->filled('password')
-            || $roleChanged;
+            || $roleChanged
+            || $planChanged;
 
         //si no hay cambios, mostrar alerta
         if (!$hasChanges) {
@@ -137,6 +193,50 @@ class UserController extends Controller
         if ($request->role) {
             $role = Role::findOrFail($request->role);
             $user->syncRoles([$role]);
+        }
+
+        //actualizar membresía si cambió el plan
+        if ($planChanged) {
+            // Cancelar membresía actual si existe
+            if ($currentMembership) {
+                DB::table('memberships')
+                    ->where('id', $currentMembership->id)
+                    ->update([
+                        'status' => 'canceled',
+                        'canceled_at' => now(),
+                        'canceled_reason' => 'Cambio de plan por administrador',
+                        'updated_at' => now(),
+                    ]);
+            }
+
+            // Crear nueva membresía si se seleccionó un plan
+            if ($request->plan_id) {
+                $plan = Plan::findOrFail($request->plan_id);
+                
+                // Calcular fecha de expiración
+                $expiresAt = null;
+                if ($plan->duration_days !== null) {
+                    $expiresAt = now()->addDays($plan->duration_days);
+                }
+                
+                // Calcular fecha de fin de prueba si aplica
+                $trialEndsAt = null;
+                if ($plan->trial_days > 0) {
+                    $trialEndsAt = now()->addDays($plan->trial_days);
+                }
+                
+                DB::table('memberships')->insert([
+                    'user_id' => $user->id,
+                    'plan_id' => $plan->id,
+                    'status' => $plan->trial_days > 0 ? 'trial' : 'active',
+                    'started_at' => now(),
+                    'expires_at' => $expiresAt,
+                    'trial_ends_at' => $trialEndsAt,
+                    'auto_renew' => true,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
 
         //variable de un solo uso para alerta

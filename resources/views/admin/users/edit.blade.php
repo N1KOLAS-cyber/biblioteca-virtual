@@ -41,6 +41,18 @@
                 </select>
             </div>
 
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Plan de Membresía (Opcional)</label>
+                <select name="plan_id" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    <option value="">Sin plan</option>
+                    @foreach($plans as $plan)
+                        <option value="{{ $plan->id }}" {{ old('plan_id', $currentPlanId) == $plan->id ? 'selected' : '' }}>
+                            {{ $plan->name }} - ${{ number_format($plan->price, 2, '.', ',') }} MXN
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
             <div class="flex justify-end mt-4">
                 <x-wire-button type="submit" blue>Actualizar</x-wire-button>
             </div>

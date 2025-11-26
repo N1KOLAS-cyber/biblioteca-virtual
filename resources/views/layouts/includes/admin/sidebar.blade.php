@@ -29,6 +29,18 @@
             'active' => request()->routeIs('admin.categories.*'),
         ],
         [
+            'name' => 'Libros',
+            'icon' => 'fa-solid fa-book',
+            'href' => route('admin.books.index'),
+            'active' => request()->routeIs('admin.books.*'),
+        ],
+        [
+            'name' => 'Planes',
+            'icon' => 'fa-solid fa-layer-group',
+            'href' => route('admin.plans.index'),
+            'active' => request()->routeIs('admin.plans.*'),
+        ],
+        [
             'name' => 'Roles y permisos',
             'icon' => 'fa-solid fa-shield-halved',
             'href' => route('admin.roles.index'),
@@ -80,8 +92,8 @@
                                         <a href="{{ $item['href'] }}"
                                            class="flex items-center w-full px-3 py-2 text-sm text-gray-700 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 {{ $item['active'] ? 'bg-gray-200' : '' }}">
                                             {{ $item['name'] }}
-                                        </a>
-                                    </li>
+                    </a>
+                </li>
                                 @endforeach
                             </ul>
                         @else
@@ -91,11 +103,11 @@
                                     <i class="{{ $link['icon'] }}"></i>
                                 </span>
                                 <span class="ms-3">{{ $link['name'] }}</span>
-                            </a>
+                    </a>
                         @endisset
                     @endisset
                 </li>
             @endforeach
-        </ul>
-    </div>
-</aside>
+            </ul>
+        </div>
+        </aside>
