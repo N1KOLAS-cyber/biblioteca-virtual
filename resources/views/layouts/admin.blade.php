@@ -21,6 +21,9 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+        {{--Sweetalert2--}}
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
         <!-- WireUI-->
         <wireui:scripts />
 
@@ -45,5 +48,11 @@
 
         @livewireScripts
         <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
+    {{--mostrar sweetalert--}}
+    @if (@session('swal'))
+        <script>
+            Swal.fire(@jason('swal'));
+        </script>
+    @endif
     </body>
 </html>
