@@ -49,10 +49,36 @@
         @livewireScripts
         <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
     {{--mostrar sweetalert--}}
-    @if (@session('swal'))
+    @if (session('swal'))
         <script>
-            Swal.fire(@jason('swal'));
+            Swal.fire(@json(session('swal')));
         </script>
     @endif
+    <script>
+        //buscar todos los elementos de una clase especifica
+        forms = document.querySelectorAll('.delete-form');
+        forms.forEach(form => {
+            //se pone al tiro/ se pone al pendiente de cualquier accion submit/activa el modo chismoso
+            form.addEventListener('submit', function(e){
+                //evita que se envie
+                e.preventDefault();
+                Swal.fire({
+                    title: "Estas seguro?",
+                    text: "No podras revertir esto ",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Si, eliminar",
+                    cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        //borra el registro
+                        form.submit();
+                    }
+                });
+            })
+        });
+    </script>
     </body>
 </html>
