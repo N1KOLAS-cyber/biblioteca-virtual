@@ -11,6 +11,24 @@
             'header' => 'Gestion',
         ],
         [
+            'name' => 'Usuarios',
+            'icon' => 'fa-solid fa-users',
+            'href' => route('admin.users.index'),
+            'active' => request()->routeIs('admin.users.*'),
+        ],
+        [
+            'name' => 'Autores',
+            'icon' => 'fa-solid fa-pen-nib',
+            'href' => route('admin.authors.index'),
+            'active' => request()->routeIs('admin.authors.*'),
+        ],
+        [
+            'name' => 'Categorías',
+            'icon' => 'fa-solid fa-tags',
+            'href' => route('admin.categories.index'),
+            'active' => request()->routeIs('admin.categories.*'),
+        ],
+        [
             'name' => 'Roles y permisos',
             'icon' => 'fa-solid fa-shield-halved',
             'href' => route('admin.roles.index'),
