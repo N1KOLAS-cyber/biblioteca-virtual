@@ -11,20 +11,28 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-//gestion de roles
-Route::resource('roles', RoleController::class);
+// Gestión de roles (solo admin)
+Route::middleware(['role:admin'])->group(function () {
+    Route::resource('roles', RoleController::class);
+});
 
-//gestion de usuarios
+// Gestión de usuarios (admin y staff)
 Route::resource('users', UserController::class);
 
-//gestion de autores
-Route::resource('authors', AuthorController::class);
+// Gestión de autores (solo admin)
+Route::middleware(['role:admin'])->group(function () {
+    Route::resource('authors', AuthorController::class);
+});
 
-//gestion de categorias
-Route::resource('categories', CategoryController::class);
+// Gestión de categorías (solo admin)
+Route::middleware(['role:admin'])->group(function () {
+    Route::resource('categories', CategoryController::class);
+});
 
-//gestion de libros
-Route::resource('books', BookController::class);
+// Gestión de libros (solo admin)
+Route::middleware(['role:admin'])->group(function () {
+    Route::resource('books', BookController::class);
+});
 
-//gestion de planes
+// Gestión de planes (admin y staff)
 Route::resource('plans', PlanController::class);

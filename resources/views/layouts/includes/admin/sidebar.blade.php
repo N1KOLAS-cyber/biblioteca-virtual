@@ -1,4 +1,7 @@
 @php
+    $user = auth()->user();
+    $isStaff = $user->hasRole('staff') && !$user->hasRole('admin');
+    
     // Arreglo de íconos con organización mejorada
     $links = [
         [
@@ -7,16 +10,18 @@
             'href' => route('admin.dashboard'),
             'active' => request()->routeIs('admin.dashboard'),
         ],
-        [
-            'header' => 'Contenido',
-        ],
-        [
+    ];
+    
+    // Solo admin puede ver Contenido
+    if (!$isStaff) {
+        $links[] = ['header' => 'Contenido'];
+        $links[] = [
             'name' => 'Autores',
             'icon' => 'fa-solid fa-pen-nib',
             'href' => route('admin.authors.index'),
             'active' => request()->routeIs('admin.authors.*'),
-        ],
-        [
+        ];
+        $links[] = [
             'name' => 'Categorías',
             'icon' => 'fa-solid fa-tags',
             'href' => route('admin.categories.index'),
@@ -33,37 +38,39 @@
                     'active' => request()->routeIs('admin.categories.create'),
                 ],
             ],
-        ],
-        [
+        ];
+        $links[] = [
             'name' => 'Libros',
             'icon' => 'fa-solid fa-book',
             'href' => route('admin.books.index'),
             'active' => request()->routeIs('admin.books.*'),
-        ],
-        [
-            'header' => 'Usuarios y Permisos',
-        ],
-        [
-            'name' => 'Usuarios',
-            'icon' => 'fa-solid fa-users',
-            'href' => route('admin.users.index'),
-            'active' => request()->routeIs('admin.users.*'),
-        ],
-        [
+        ];
+    }
+    
+    $links[] = ['header' => 'Usuarios y Permisos'];
+    $links[] = [
+        'name' => 'Usuarios',
+        'icon' => 'fa-solid fa-users',
+        'href' => route('admin.users.index'),
+        'active' => request()->routeIs('admin.users.*'),
+    ];
+    
+    // Solo admin puede ver Roles y permisos
+    if (!$isStaff) {
+        $links[] = [
             'name' => 'Roles y permisos',
             'icon' => 'fa-solid fa-shield-halved',
             'href' => route('admin.roles.index'),
             'active' => request()->routeIs('admin.roles.*'),
-        ],
-        [
-            'header' => 'Configuración',
-        ],
-        [
-            'name' => 'Planes',
-            'icon' => 'fa-solid fa-layer-group',
-            'href' => route('admin.plans.index'),
-            'active' => request()->routeIs('admin.plans.*'),
-        ],
+        ];
+    }
+    
+    $links[] = ['header' => 'Configuración'];
+    $links[] = [
+        'name' => 'Planes',
+        'icon' => 'fa-solid fa-layer-group',
+        'href' => route('admin.plans.index'),
+        'active' => request()->routeIs('admin.plans.*'),
     ];
 @endphp
 
