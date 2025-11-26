@@ -3,8 +3,8 @@
     <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
             <div class="text-center">
-                <h1 class="text-5xl md:text-6xl font-bold mb-6">
-                    Bienvenido a Biblioteca Virtual
+                <h1 id="typing-title" class="text-5xl md:text-6xl font-bold mb-6 min-h-[4rem] md:min-h-[5rem]">
+                    <span id="typing-text"></span><span id="typing-cursor" class="animate-pulse">|</span>
                 </h1>
                 <p class="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
                     Descubre miles de libros y sumérgete en historias fascinantes. Tu biblioteca digital está a un clic de distancia.
@@ -121,5 +121,38 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const text = 'Bienvenido a Biblioteca Virtual';
+            const typingElement = document.getElementById('typing-text');
+            const cursorElement = document.getElementById('typing-cursor');
+            let index = 0;
+            
+            function typeWriter() {
+                if (index < text.length) {
+                    typingElement.textContent += text.charAt(index);
+                    index++;
+                    setTimeout(typeWriter, 100); // Velocidad de escritura (100ms por letra)
+                } else {
+                    // Una vez terminado, ocultar el cursor después de un breve delay
+                    setTimeout(function() {
+                        cursorElement.style.display = 'none';
+                    }, 500);
+                }
+            }
+            
+            // Iniciar el efecto después de un pequeño delay
+            setTimeout(typeWriter, 500);
+        });
+    </script>
+    <style>
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    </style>
+    @endpush
 </x-app>
 
