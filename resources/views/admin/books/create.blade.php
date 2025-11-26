@@ -52,6 +52,18 @@
                 </x-wire-input>
             </div>
 
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Categorías</label>
+                <div class="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-gray-300 rounded-lg p-3">
+                    @foreach($categories as $category)
+                        <label class="flex items-center">
+                            <input type="checkbox" name="categories[]" value="{{ $category->id }}" {{ in_array($category->id, old('categories', [])) ? 'checked' : '' }} class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">{{ $category->nombre }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+
             <div class="mt-4 space-y-2">
                 <label class="flex items-center">
                     <input type="checkbox" name="is_free" value="1" {{ old('is_free') ? 'checked' : '' }} class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">

@@ -16,7 +16,7 @@
         <p class="font-bold text-gray-600"> </p>
     </div>
     <x-wire-card>
-        <form action="{{route('admin.books.update', $book )}}" method="POST">
+        <form action="{{route('admin.books.update', $book->id )}}" method="POST">
             @csrf
             @method('PUT')
 

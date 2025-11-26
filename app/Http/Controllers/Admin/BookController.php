@@ -25,7 +25,8 @@ class BookController extends Controller
     public function create()
     {
         $authors = Author::all();
-        return view('admin.books.create', compact('authors'));
+        $categories = Category::where('is_active', true)->get();
+        return view('admin.books.create', compact('authors', 'categories'));
     }
 
     /**
@@ -45,6 +46,8 @@ class BookController extends Controller
                 'editorial' => 'nullable|string|max:255',
                 'is_free' => 'boolean',
                 'is_featured' => 'boolean',
+                'categories' => 'nullable|array',
+                'categories.*' => 'exists:categories,id',
             ], [
                 'titulo.required' => 'El título es obligatorio',
                 'titulo.max' => 'El título no puede tener más de 255 caracteres',
@@ -59,13 +62,14 @@ class BookController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Si falla la validación, redirigir de vuelta con los datos y las variables necesarias
             $authors = Author::all();
+            $categories = Category::where('is_active', true)->get();
             
             // Obtener el primer error para mostrar en SweetAlert
             $firstError = $e->validator->errors()->first();
             
             return redirect()->route('admin.books.create')
                 ->withInput()
-                ->with(compact('authors'))
+                ->with(compact('authors', 'categories'))
                 ->with('swal', [
                     'icon' => 'error',
                     'title' => 'Error de validación',
@@ -99,6 +103,11 @@ class BookController extends Controller
                 'is_featured' => $request->has('is_featured') ? (bool) $request->is_featured : false,
             ]);
 
+            // Asignar categorías si se proporcionaron
+            if ($request->has('categories')) {
+                $book->categories()->sync($request->categories);
+            }
+
             //variable de un solo uso para alerta
             session()->flash('swal', [
                 'icon' => 'success',
@@ -111,10 +120,11 @@ class BookController extends Controller
         } catch (\Exception $e) {
             // Si hay un error al crear, mostrar alerta de error
             $authors = Author::all();
+            $categories = Category::where('is_active', true)->get();
             
             return redirect()->route('admin.books.create')
                 ->withInput()
-                ->with(compact('authors'))
+                ->with(compact('authors', 'categories'))
                 ->with('swal', [
                     'icon' => 'error',
                     'title' => 'Error al crear libro',
@@ -173,7 +183,7 @@ class BookController extends Controller
             // Obtener el primer error para mostrar en SweetAlert
             $firstError = $e->validator->errors()->first();
             
-            return redirect()->route('admin.books.edit', $book)
+            return redirect()->route('admin.books.edit', $id)
                 ->withInput()
                 ->with(compact('authors', 'categories'))
                 ->with('swal', [
