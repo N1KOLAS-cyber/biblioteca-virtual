@@ -25,8 +25,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'Nicolas Gamboa',
             'email' => 'prueba0@gmail.com',
             'password' => bcrypt('prueba1230'),
+            'role' => 'admin',
         ]);
-        
+
         // Asignar rol de admin
         $admin->assignRole('admin');
     }

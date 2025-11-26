@@ -134,8 +134,9 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Book $book)
+    public function edit(string $id)
     {
+        $book = Book::findOrFail($id);
         $authors = Author::all();
         $categories = Category::where('is_active', true)->get();
         return view('admin.books.edit', compact('book', 'authors', 'categories'));
@@ -269,8 +270,10 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Book $book)
+    public function destroy(string $id)
     {
+        $book = Book::findOrFail($id);
+        
         //borrar el elemento
         $book->delete();
 
